@@ -1,28 +1,20 @@
-project "Fission"
-    kind "StaticLib"
+project "FissionTest"
+    kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
     staticruntime "Off"
 
-    targetdir (BuildDir .. "/%{prj.name}")
-    objdir (IntermediatesDir .. "/%{prj.name}")
-
     files {
-        "Source/**.cpp",
-        "Source/**.hpp",
-        "Source/**.h"
+        "./**.cpp",
+        "./**.hpp",
+        "./**.h"
     }
 
-    includedirs { "Source/" }
+    includedirs { "../Source" }
+
+    links "Fission"
 
     vectorextensions "AVX2"
-
-    filter "action:vs*"
-        pchheader "FissionPCH.hpp"
-        pchsource "Source/FissionPCH.cpp"
-
-    filter "action:not vs*"
-        pchheader "FissionPCH.hpp"
 
     filter "system:windows"
         systemversion "latest"
@@ -49,5 +41,3 @@ project "Fission"
         runtime "Release"
         optimize "Full"
         conformancemode "On"
-
-include "Tests"

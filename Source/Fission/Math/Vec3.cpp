@@ -25,6 +25,44 @@ namespace Fission::Math {
 #endif
 	}
 
+	float Vec3::Dot(const Vec3& InOther) const
+	{
+#ifdef FISSION_USE_SSE
+		return _mm_cvtss_f32(_mm_dp_ps(Value, InOther.Value, 0x7F));
+#else
+		float DotProduct = 0.0f;
+		for (size_t Idx = 0; Idx < 3; Idx++)
+			DotProduct += Floats[Idx] * InOther.Floats[Idx];
+		return DotProduct;
+#endif
+	}
+
+	float Vec3::Length() const
+	{
+#ifdef FISSION_USE_SSE
+		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_dp_ps(Value, Value, 0x7F)));
+#else
+		return sqrt(LengthSq());
+#endif
+	}
+
+	bool Vec3::operator==(const Vec3& InOther) const
+	{
+#ifdef FISSION_USE_SSE
+		return _mm_movemask_ps(_mm_cmp_ps(Value, InOther.Value, _CMP_EQ_OS)) == 0xF;
+#else
+		for (size_t Idx = 0; Idx < 4; Idx++)
+		{
+			if (Floats[Idx] != InOther.Floats[Idx])
+				return false;
+		}
+
+		return true;
+#endif
+	}
+
+	bool Vec3::operator!=(const Vec3& InOther) const { return !(*this == InOther); }
+
 	Vec3 Vec3::operator+(const Vec3& InOther) const
 	{
 #ifdef FISSION_USE_SSE
@@ -224,27 +262,6 @@ namespace Fission::Math {
 		return _mm_sub_ps(_mm_setzero_ps(), Value);
 #else
 		return Vec3(-Floats[0], -Floats[1], -Floats[2]);
-#endif
-	}
-
-	float Vec3::Dot(const Vec3& InOther) const
-	{
-#ifdef FISSION_USE_SSE
-		return _mm_cvtss_f32(_mm_dp_ps(Value, InOther.Value, 0x7F));
-#else
-		float DotProduct = 0.0f;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			DotProduct += Floats[Idx] * InOther.Floats[Idx];
-		return DotProduct;
-#endif
-	}
-
-	float Vec3::Length() const
-	{
-#ifdef FISSION_USE_SSE
-		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_dp_ps(Value, Value, 0x7F)));
-#else
-		return sqrt(LengthSq());
 #endif
 	}
 

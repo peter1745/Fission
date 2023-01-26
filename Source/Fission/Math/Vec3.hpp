@@ -26,6 +26,32 @@ namespace Fission::Math {
 		Vec3(Type InValue)
 		    : Value(InValue) {}
 
+		#ifdef FISSION_USE_SSE
+		float GetX() const
+		{
+			return _mm_cvtss_f32(Value);
+		}
+		float GetY() const { return Floats[1]; }
+		float GetZ() const { return Floats[2]; }
+#else
+		float GetX() const
+		{
+			return Floats[0];
+		}
+		float GetY() const { return Floats[1]; }
+		float GetZ() const { return Floats[2]; }
+#endif
+
+		float Dot(const Vec3& InOther) const;
+
+		float LengthSq() const { return Dot(*this); }
+		float Length() const;
+
+		float operator[](size_t InIdx) const { return Floats[InIdx]; }
+
+		bool operator==(const Vec3& InOther) const;
+		bool operator!=(const Vec3& InOther) const;
+
 		Vec3 operator+(const Vec3& InOther) const;
 		Vec3 operator+(float InValue) const;
 
@@ -43,7 +69,7 @@ namespace Fission::Math {
 
 		Vec3& operator-=(const Vec3& InOther);
 		Vec3& operator-=(float InValue);
-		
+
 		Vec3& operator/=(const Vec3& InOther);
 		Vec3& operator/=(float InValue);
 
@@ -51,23 +77,6 @@ namespace Fission::Math {
 		Vec3& operator*=(float InValue);
 
 		Vec3 operator-() const;
-
-#ifdef FISSION_USE_SSE
-		float GetX() const { return _mm_cvtss_f32(Value); }
-		float GetY() const { return Floats[1]; }
-		float GetZ() const { return Floats[2]; }
-#else
-		float GetX() const { return Floats[0]; }
-		float GetY() const { return Floats[1]; }
-		float GetZ() const { return Floats[2]; }
-#endif
-
-		float Dot(const Vec3& InOther) const;
-
-		float LengthSq() const { return Dot(*this); }
-		float Length() const;
-
-		float operator[](size_t InIdx) const { return Floats[InIdx]; }
 
 		static Vec3 Min(const Vec3& InVec0, const Vec3& InVec1);
 		static Vec3 Max(const Vec3& InVec0, const Vec3& InVec1);
