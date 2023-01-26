@@ -47,6 +47,9 @@ namespace Fission::Math {
 		float LengthSq() const { return Dot(*this); }
 		float Length() const;
 
+		void Normalize();
+		Vec3 Normalized();
+
 		float operator[](size_t InIdx) const { return Floats[InIdx]; }
 
 		bool operator==(const Vec3& InOther) const;

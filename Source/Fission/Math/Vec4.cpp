@@ -1,9 +1,9 @@
 #include "FissionPCH.hpp"
-#include "Vec3.hpp"
+#include "Vec4.hpp"
 
 namespace Fission::Math {
 
-	Vec3::Vec3(float InScalar)
+	Vec4::Vec4(float InScalar)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_set1_ps(InScalar);
@@ -13,22 +13,22 @@ namespace Fission::Math {
 #endif
 	}
 
-	Vec3::Vec3(float InX, float InY, float InZ)
+	Vec4::Vec4(float InX, float InY, float InZ, float InW)
 	{
 #ifdef FISSION_USE_SSE
-		Value = _mm_setr_ps(InX, InY, InZ, InZ);
+		Value = _mm_setr_ps(InX, InY, InZ, InW);
 #else
 		Floats[0] = InX;
 		Floats[1] = InY;
 		Floats[2] = InZ;
-		Floats[3] = InZ;
+		Floats[3] = InW;
 #endif
 	}
 
-	float Vec3::Dot(const Vec3& InOther) const
+	float Vec4::Dot(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
-		return _mm_cvtss_f32(_mm_dp_ps(Value, InOther.Value, 0x7F));
+		return _mm_cvtss_f32(_mm_dp_ps(Value, InOther.Value, 0xFF));
 #else
 		float DotProduct = 0.0f;
 		for (size_t Idx = 0; Idx < 3; Idx++)
@@ -37,19 +37,19 @@ namespace Fission::Math {
 #endif
 	}
 
-	float Vec3::Length() const
+	float Vec4::Length() const
 	{
 #ifdef FISSION_USE_SSE
-		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_dp_ps(Value, Value, 0x7F)));
+		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_dp_ps(Value, Value, 0xFF)));
 #else
 		return sqrt(LengthSq());
 #endif
 	}
 
-	void Vec3::Normalize()
+	void Vec4::Normalize()
 	{
 #ifdef FISSION_USE_SSE
-		__m128 InvLength = _mm_div_ps(_mm_set1_ps(1.0f), _mm_sqrt_ps(_mm_dp_ps(Value, Value, 0x7F)));
+		__m128 InvLength = _mm_div_ps(_mm_set1_ps(1.0f) , _mm_sqrt_ps(_mm_dp_ps(Value, Value, 0xFF)));
 		Value = _mm_mul_ps(Value, InvLength);
 #else
 		float InvLength = 1.0f / Length();
@@ -58,14 +58,14 @@ namespace Fission::Math {
 #endif
 	}
 
-	Vec3 Vec3::Normalized()
+	Vec4 Vec4::Normalized()
 	{
-		Vec3 Result(Value);
+		Vec4 Result(Value);
 		Result.Normalize();
 		return Result;
 	}
 
-	bool Vec3::operator==(const Vec3& InOther) const
+	bool Vec4::operator==(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_movemask_ps(_mm_cmp_ps(Value, InOther.Value, _CMP_EQ_OS)) == 0xF;
@@ -80,26 +80,26 @@ namespace Fission::Math {
 #endif
 	}
 
-	bool Vec3::operator!=(const Vec3& InOther) const { return !(*this == InOther); }
+	bool Vec4::operator!=(const Vec4& InOther) const { return !(*this == InOther); }
 
-	Vec3 Vec3::operator+(const Vec3& InOther) const
+	Vec4 Vec4::operator+(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_add_ps(Value, InOther.Value);
 #else
-		Vec3 Result;
+		Vec4 Result;
 		for (size_t Idx = 0; Idx < 4; Idx++)
 			Result.Floats[Idx] = Floats[Idx] + InOther.Floats[Idx];
 		return Result;
 #endif
 	}
 
-	Vec3 Vec3::operator+(float InValue) const
+	Vec4 Vec4::operator+(float InValue) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_add_ps(Value, _mm_set1_ps(InValue));
 #else
-		return Vec3(
+		return Vec4(
 		    Floats[0] + InValue,
 		    Floats[1] + InValue,
 		    Floats[2] + InValue
@@ -107,79 +107,79 @@ namespace Fission::Math {
 #endif
 	}
 
-	Vec3 Vec3::operator-(const Vec3& InOther) const
+	Vec4 Vec4::operator-(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_sub_ps(Value, InOther.Value);
 #else
-		Vec3 Result;
+		Vec4 Result;
 		for (size_t Idx = 0; Idx < 4; Idx++)
 			Result.Floats[Idx] = Floats[Idx] - InOther.Floats[Idx];
 		return Result;
 #endif
 	}
 
-	Vec3 Vec3::operator-(float InValue) const
+	Vec4 Vec4::operator-(float InValue) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_sub_ps(Value, _mm_set1_ps(InValue));
 #else
-		return Vec3(
+		return Vec4(
 		    Floats[0] - InValue,
 		    Floats[1] - InValue,
 		    Floats[2] - InValue);
 #endif
 	}
 
-	Vec3 Vec3::operator/(const Vec3& InOther) const
+	Vec4 Vec4::operator/(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_div_ps(Value, InOther.Value);
 #else
-		Vec3 Result;
+		Vec4 Result;
 		for (size_t Idx = 0; Idx < 4; Idx++)
 			Result.Floats[Idx] = Floats[Idx] / InOther.Floats[Idx];
 		return Result;
 #endif
 	}
 
-	Vec3 Vec3::operator/(float InValue) const
+	Vec4 Vec4::operator/(float InValue) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_div_ps(Value, _mm_set1_ps(InValue));
 #else
-		return Vec3(
+		return Vec4(
 		    Floats[0] / InValue,
 		    Floats[1] / InValue,
 		    Floats[2] / InValue);
 #endif
 	}
 
-	Vec3 Vec3::operator*(const Vec3& InOther) const
+	Vec4 Vec4::operator*(const Vec4& InOther) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_mul_ps(Value, InOther.Value);
 #else
-		Vec3 Result;
+		Vec4 Result;
 		for (size_t Idx = 0; Idx < 4; Idx++)
 			Result.Floats[Idx] = Floats[Idx] * InOther.Floats[Idx];
 		return Result;
 #endif
 	}
 
-	Vec3 Vec3::operator*(float InValue) const
+	Vec4 Vec4::operator*(float InValue) const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_mul_ps(Value, _mm_set1_ps(InValue));
 #else
-		return Vec3(
+		return Vec4(
 		    Floats[0] * InValue,
 		    Floats[1] * InValue,
 		    Floats[2] * InValue);
 #endif
 	}
 
-	Vec3& Vec3::operator+=(const Vec3& InOther)
+	Vec4& Vec4::operator+=(const Vec4& InOther)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_add_ps(Value, InOther.Value);
@@ -191,7 +191,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator+=(float InValue)
+	Vec4& Vec4::operator+=(float InValue)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_add_ps(Value, _mm_set1_ps(InValue));
@@ -203,7 +203,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator-=(const Vec3& InOther)
+	Vec4& Vec4::operator-=(const Vec4& InOther)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_sub_ps(Value, InOther.Value);
@@ -215,7 +215,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator-=(float InValue)
+	Vec4& Vec4::operator-=(float InValue)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_sub_ps(Value, _mm_set1_ps(InValue));
@@ -227,7 +227,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator/=(const Vec3& InOther)
+	Vec4& Vec4::operator/=(const Vec4& InOther)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_div_ps(Value, InOther.Value);
@@ -239,7 +239,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator/=(float InValue)
+	Vec4& Vec4::operator/=(float InValue)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_div_ps(Value, _mm_set1_ps(InValue));
@@ -251,7 +251,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator*=(const Vec3& InOther)
+	Vec4& Vec4::operator*=(const Vec4& InOther)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_mul_ps(Value, InOther.Value);
@@ -263,7 +263,7 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3& Vec3::operator*=(float InValue)
+	Vec4& Vec4::operator*=(float InValue)
 	{
 #ifdef FISSION_USE_SSE
 		Value = _mm_mul_ps(Value, _mm_set1_ps(InValue));
@@ -275,21 +275,21 @@ namespace Fission::Math {
 		return *this;
 	}
 
-	Vec3 Vec3::operator-() const
+	Vec4 Vec4::operator-() const
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_sub_ps(_mm_setzero_ps(), Value);
 #else
-		return Vec3(-Floats[0], -Floats[1], -Floats[2]);
+		return Vec4(-Floats[0], -Floats[1], -Floats[2]);
 #endif
 	}
 
-	Vec3 Vec3::Min(const Vec3& InVec0, const Vec3& InVec1)
+	Vec4 Vec4::Min(const Vec4& InVec0, const Vec4& InVec1)
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_min_ps(InVec0.Value, InVec1.Value);
 #else
-		return Vec3(
+		return Vec4(
 		    std::min(InVec0.Floats[0], InVec1.Floats[0]),
 		    std::min(InVec0.Floats[1], InVec1.Floats[1]),
 		    std::min(InVec0.Floats[2], InVec1.Floats[2])
@@ -297,24 +297,24 @@ namespace Fission::Math {
 #endif
 	}
 
-	Vec3 Vec3::Max(const Vec3& InVec0, const Vec3& InVec1)
+	Vec4 Vec4::Max(const Vec4& InVec0, const Vec4& InVec1)
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_max_ps(InVec0.Value, InVec1.Value);
 #else
-		return Vec3(
+		return Vec4(
 		    std::max(InVec0.Floats[0], InVec1.Floats[0]),
 		    std::max(InVec0.Floats[1], InVec1.Floats[1]),
 		    std::max(InVec0.Floats[2], InVec1.Floats[2]));
 #endif
 	}
 
-	Vec3 Vec3::Zero()
+	Vec4 Vec4::Zero()
 	{
 #ifdef FISSION_USE_SSE
 		return _mm_setzero_ps();
 #else
-		return Vec3(0.0f);
+		return Vec4(0.0f);
 #endif
 	}
 
