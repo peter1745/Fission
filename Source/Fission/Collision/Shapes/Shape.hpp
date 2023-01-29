@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Fission/Math/Vec3.hpp"
+#include "Fission/Math/FVec3.hpp"
+#include "Fission/Math/Mat3x3.hpp"
 
 namespace Fission {
 
@@ -11,12 +12,12 @@ namespace Fission {
 	public:
 		virtual constexpr EShapeType GetType() const = 0;
 
-		//const glm::mat3& GetInertiaTensor() const { return m_InertiaTensor; }
-		const Math::Vec3& GetCenterOfMass() const { return m_CenterOfMass; } 
+		const Math::Mat3x3& GetInertiaTensor() const { return m_InertiaTensor; }
+		const Math::FVec3& GetCenterOfMass() const { return m_CenterOfMass; } 
 
 	protected:
-		//glm::mat3 m_InertiaTensor;
-		Math::Vec3 m_CenterOfMass = { 0.0f, 0.0f, 0.0f };
+		Math::Mat3x3 m_InertiaTensor;
+		Math::FVec3 m_CenterOfMass = { 0.0f, 0.0f, 0.0f };
 	};
 
 }

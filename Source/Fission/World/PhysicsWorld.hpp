@@ -10,7 +10,7 @@ namespace Fission {
 
 	struct PhysicsSettings
 	{
-		Math::Vec3 Gravity = { 0.0f, -9.81f, 0.0f };
+		Math::FVec3 Gravity = { 0.0f, -9.81f, 0.0f };
 	};
 
 	class PhysicsWorld

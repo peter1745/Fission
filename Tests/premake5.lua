@@ -10,11 +10,16 @@ project "FissionTest"
         "./**.h"
     }
 
-    includedirs { "../Source" }
+    includedirs { "../Source", "../ThirdParty/glm/" }
 
     links "Fission"
 
     vectorextensions "AVX2"
+
+    defines {
+        "GLM_FORCE_INTRINSICS",
+        "GLM_FORCE_ALIGNED_GENTYPES"
+    }
 
     filter "system:windows"
         systemversion "latest"

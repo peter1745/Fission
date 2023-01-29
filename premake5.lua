@@ -15,8 +15,6 @@ project "Fission"
 
     includedirs { "Source/" }
 
-    vectorextensions "AVX2"
-
     filter "action:vs*"
         pchheader "FissionPCH.hpp"
         pchsource "Source/FissionPCH.cpp"
@@ -50,4 +48,4 @@ project "Fission"
         optimize "Full"
         conformancemode "On"
 
-include "Tests"
+--include "Tests"

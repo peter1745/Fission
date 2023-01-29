@@ -3,21 +3,34 @@
 
 namespace Fission {
 
-	void DynamicBody::AddAngularImpulse(const Math::Vec3& InImpulse)
+	void DynamicBody::AddImpulse(const Math::FVec3& InPoint, const Math::FVec3& InImpulse)
 	{
-		//m_AngularVelocity += GetWorldSpaceInverseInertiaTensor() * InImpulse;
+		AddLinearImpulse(InImpulse);
+
+		auto Position = GetWorldSpaceCenterOfMass();
+		auto RelativePoint = InPoint - Position;
+		AddAngularImpulse(RelativePoint.Cross(InImpulse));
 	}
 
-	//glm::mat3 DynamicBody::GetWorldSpaceInverseInertiaTensor() const
-	//{
-	//	/*glm::mat3 Rotation = glm::toMat3(m_Rotation);
-	//	return Rotation * m_InvInertia * glm::transpose(Rotation);*/
-	//	return glm::mat3(0.0f);
-	//}
+	void DynamicBody::AddLinearImpulse(const Math::FVec3& InImpulse)
+	{
+		m_LinearVelocity += InImpulse * m_InvMass;
+	}
+
+	void DynamicBody::AddAngularImpulse(const Math::FVec3& InImpulse)
+	{
+		m_AngularVelocity += GetWorldSpaceInverseInertiaTensor() * InImpulse;
+	}
+
+	Math::Mat3x3 DynamicBody::GetWorldSpaceInverseInertiaTensor() const
+	{
+		Math::Mat3x3 Rotation = Math::Mat3x3::FromQuat(m_Rotation);
+		return Rotation * m_InvInertia * Rotation.Transposed();
+	}
 
 	void DynamicBody::UpdateInertiaTensor()
 	{
-		//m_InvInertia = glm::inverse(m_Shape->GetInertiaTensor()) * m_InvMass;
+		m_InvInertia = m_Shape->GetInertiaTensor().Inversed() * m_InvMass;
 	}
 
 }

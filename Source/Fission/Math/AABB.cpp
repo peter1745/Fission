@@ -3,14 +3,14 @@
 
 namespace Fission::Math {
 
-	bool AABB::IsPointInside(const Vec3& InPoint) const
+	bool AABB::IsPointInside(const FVec3& InPoint) const
 	{
-		if (InPoint.GetX() < MinBound.GetX() || InPoint.GetY() < MinBound.GetY() || InPoint.GetZ() < MinBound.GetZ())
+		if (InPoint.X < MinBound.X || InPoint.Y < MinBound.Y || InPoint.Z < MinBound.Z)
 		{
 			return false;
 		}
 
-		if (InPoint.GetX() > MaxBound.GetX() || InPoint.GetY() > MaxBound.GetY() || InPoint.GetZ() > MaxBound.GetZ())
+		if (InPoint.X > MaxBound.X || InPoint.Y > MaxBound.Y || InPoint.Z > MaxBound.Z)
 		{
 			return false;
 		}
@@ -20,12 +20,12 @@ namespace Fission::Math {
 
 	bool AABB::IsAABBInside(const AABB& InOther) const
 	{
-		if (MinBound.GetX() > InOther.MaxBound.GetX() || MinBound.GetY() > InOther.MaxBound.GetY() || MinBound.GetZ() > InOther.MaxBound.GetZ())
+		if (MinBound.X > InOther.MaxBound.X || MinBound.Y > InOther.MaxBound.Y || MinBound.Z > InOther.MaxBound.Z)
 		{
 			return false;
 		}
 
-		if (MaxBound.GetX() < InOther.MinBound.GetX() || MaxBound.GetY() < InOther.MinBound.GetY() || MaxBound.GetZ() < InOther.MinBound.GetZ())
+		if (MaxBound.X < InOther.MinBound.X || MaxBound.Y < InOther.MinBound.Y || MaxBound.Z < InOther.MinBound.Z)
 		{
 			return false;
 		}
@@ -33,7 +33,7 @@ namespace Fission::Math {
 		return true;
 	}
 
-	void AABB::Offset(const Vec3& InOffset)
+	void AABB::Offset(const FVec3& InOffset)
 	{
 		MinBound += InOffset;
 		MaxBound += InOffset;

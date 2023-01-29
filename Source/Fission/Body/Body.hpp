@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Fission/Collision/Shapes/Shape.hpp"
-#include "Fission/Math/Vec3.hpp"
+#include "Fission/Math/FVec3.hpp"
+#include "Fission/Math/FQuat.hpp"
 
 #include <memory>
 
@@ -12,8 +13,8 @@ namespace Fission {
 	struct BodySettings
 	{
 		EBodyType BodyType = EBodyType::Dynamic;
-		Math::Vec3 Position = { 0.0f, 0.0f, 0.0f };
-		//glm::quat Rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+		Math::FVec3 Position = { 0.0f, 0.0f, 0.0f };
+		Math::FQuat Rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 		float Mass = 1000.0f;
 		Shape* CollisionShape = nullptr;
 	};
@@ -21,8 +22,11 @@ namespace Fission {
 	class Body
 	{
 	public:
-		const Math::Vec3& GetPosition() const { return m_Position; }
-		void SetPosition(const Math::Vec3& InPosition) { m_Position = InPosition; }
+		const Math::FVec3& GetPosition() const { return m_Position; }
+		void SetPosition(const Math::FVec3& InPosition) { m_Position = InPosition; }
+
+		const Math::FQuat& GetRotation() const { return m_Rotation; }
+		void SetRotation(const Math::FQuat& InRotation) { m_Rotation = InRotation; }
 
 		virtual constexpr EBodyType GetType() const { return EBodyType::Static; }
 
@@ -32,12 +36,15 @@ namespace Fission {
 			return static_cast<TBodyType*>(this);
 		}
 
+		const Math::FVec3& GetCenterOfMass() const { return m_Shape->GetCenterOfMass(); }
+		Math::FVec3 GetWorldSpaceCenterOfMass() const { return m_Position + (m_Rotation * m_Shape->GetCenterOfMass()); }
+
 	public:
 		Shape* GetShape() const { return m_Shape; }
 
 	protected:
-		Math::Vec3 m_Position;
-		//glm::quat m_Rotation;
+		Math::FVec3 m_Position;
+		Math::FQuat m_Rotation;
 
 		// TODO(Peter): Make this a unique_ptr, body should own it's shape
 		Shape* m_Shape = nullptr;
