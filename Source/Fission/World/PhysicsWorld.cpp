@@ -14,6 +14,7 @@ namespace Fission {
 		//				but in the future I'll implement Velocity Verlet and RK4
 		//				so that I can compare them.
 		m_BodyIntegrator = std::make_unique<SemiImplicitEulerIntegrator>();
+		m_BroadPhase = std::make_unique<BroadPhase>();
 	}
 
 	void PhysicsWorld::Shutdown()
@@ -25,15 +26,38 @@ namespace Fission {
 	{
 		m_DeltaTime = InDeltaTime;
 
-		for (auto& BodyPtr : m_Bodies)
+		for (auto& body : m_Bodies)
 		{
-			if (BodyPtr->GetType() != EBodyType::Dynamic)
+			if (body->GetType() != EBodyType::Dynamic)
 				continue;
 
-			m_BodyIntegrator->IntegrateForceTorqueAndDrag(BodyPtr->As<DynamicBody>(), m_Settings.Gravity, InDeltaTime);
+			m_BodyIntegrator->IntegrateForceTorqueAndDrag(body->As<DynamicBody>(), m_Settings.Gravity, InDeltaTime);
 		}
 
-		ContactResolver Resolver;
+		ContactResolver resolver;
+#if 1
+		m_BroadPhase->Execute(m_Bodies, InDeltaTime);
+		for (const auto& pair : m_BroadPhase->GetCollisionPairs())
+		{
+			auto& body0 = m_Bodies[pair.A];
+			auto& body1 = m_Bodies[pair.B];
+
+			if (body0->GetType() == EBodyType::Static && body1->GetType() == EBodyType::Static)
+				continue;
+
+			Shape* shape0 = body0->GetShape();
+			Shape* shape1 = body1->GetShape();
+
+			if (shape0 == nullptr || shape1 == nullptr)
+				continue;
+
+			bool isColliding = false;
+			isColliding = CollisionChecker::TestSphereSphereCollision(body0->GetPosition(), static_cast<const SphereShape*>(shape0), body1->GetPosition(), static_cast<const SphereShape*>(shape1));
+
+			if (isColliding)
+				resolver.GenerateContact(body0.get(), body1.get());
+		}
+#else
 		for (size_t I0 = 0; I0 < m_Bodies.size(); I0++)
 		{
 			auto& Body0 = m_Bodies[I0];
@@ -52,76 +76,24 @@ namespace Fission {
 
 				Shape* Shape1 = Body1->GetShape();
 
-				bool IsColliding = false;
-
-				switch (Shape0->GetType())
-				{
-				case EShapeType::Sphere:
-				{
-					SphereShape* Sphere = static_cast<SphereShape*>(Shape0);
-					
-					switch (Shape1->GetType())
-					{
-					case EShapeType::Sphere:
-					{
-						SphereShape* Sphere1 = static_cast<SphereShape*>(Shape1);
-						IsColliding = CollisionChecker::TestSphereSphereCollision(Body0->GetPosition(), Sphere, Body1->GetPosition(), Sphere1);
-						break;
-					}
-					case EShapeType::Box:
-					{
-						BoxShape* Box = static_cast<BoxShape*>(Shape1);
-						IsColliding = CollisionChecker::TestSphereBoxCollision(Body0->GetPosition(), Sphere, Body1->GetPosition(), Box);
-						break;
-					}
-					}
-					break;
-				}
-				case EShapeType::Box:
-				{
-					BoxShape* Box = static_cast<BoxShape*>(Shape0);
-
-					switch (Shape1->GetType())
-					{
-					case EShapeType::Sphere:
-					{
-						SphereShape* Sphere = static_cast<SphereShape*>(Shape1);
-						IsColliding = CollisionChecker::TestSphereBoxCollision(Body1->GetPosition(), Sphere, Body0->GetPosition(), Box);
-						break;
-					}
-
-					case EShapeType::Box:
-					{
-						BoxShape* Box1 = static_cast<BoxShape*>(Shape1);
-						IsColliding = CollisionChecker::TestBoxBoxCollision(Body0->GetPosition(), Box, Body1->GetPosition(), Box1);
-						break;
-					}
-					}
-				}
-				}
+				bool isColliding = false;
+				isColliding = CollisionChecker::TestSphereSphereCollision(body0->GetPosition(), static_cast<const SphereShape*>(shape0), body1->GetPosition(), static_cast<const SphereShape*>(shape1));
 
 				if (IsColliding)
-				{
-					Resolver.GenerateContact(Body0.get(), Body1.get());
-
-					/*if (Body0->GetType() == EBodyType::Dynamic)
-						Body0->As<DynamicBody>()->SetLinearVelocity(glm::zero<glm::vec3>());
-
-					if (Body1->GetType() == EBodyType::Dynamic)
-						Body1->As<DynamicBody>()->SetLinearVelocity(glm::zero<glm::vec3>());*/
-				}
+					resolver.GenerateContact(Body0.get(), Body1.get());
 			}
 		}
+#endif
 
-		Resolver.ResolveContacts();
-
-		for (auto& BodyPtr : m_Bodies)
+		for (auto& body : m_Bodies)
 		{
-			if (BodyPtr->GetType() != EBodyType::Dynamic)
+			if (body->GetType() != EBodyType::Dynamic)
 				continue;
 
-			m_BodyIntegrator->IntegrateVelocity(BodyPtr->As<DynamicBody>(), InDeltaTime);
+			m_BodyIntegrator->IntegrateVelocity(body->As<DynamicBody>(), InDeltaTime);
 		}
+
+		resolver.ResolveContacts();
 	}
 
 	Body* PhysicsWorld::CreateBody(const BodySettings& InSettings)
@@ -130,21 +102,21 @@ namespace Fission {
 		{
 		case EBodyType::Static:
 		{
-			auto NewBody = std::make_unique<Body>();
-			NewBody->m_Position = InSettings.Position;
-			//NewBody->m_Rotation = InSettings.Rotation;
-			NewBody->m_Shape = InSettings.CollisionShape;
-			return m_Bodies.emplace_back(std::move(NewBody)).get();
+			auto body = std::make_unique<Body>();
+			body->m_Position = InSettings.Position;
+			body->m_Rotation = InSettings.Rotation;
+			body->m_Shape = InSettings.CollisionShape;
+			return m_Bodies.emplace_back(std::move(body)).get();
 		}
 		case EBodyType::Dynamic:
 		{
-			auto NewBody = std::make_unique<DynamicBody>();
-			NewBody->m_Position = InSettings.Position;
-			//NewBody->m_Rotation = InSettings.Rotation;
-			NewBody->m_Shape = InSettings.CollisionShape;
-			NewBody->m_InvMass = 1.0f / InSettings.Mass;
-			NewBody->UpdateInertiaTensor();
-			return m_Bodies.emplace_back(std::move(NewBody)).get();
+			auto body = std::make_unique<DynamicBody>();
+			body->m_Position = InSettings.Position;
+			body->m_Rotation = InSettings.Rotation;
+			body->m_Shape = InSettings.CollisionShape;
+			body->m_InvMass = 1.0f / InSettings.Mass;
+			body->UpdateInertiaTensor();
+			return m_Bodies.emplace_back(std::move(body)).get();
 		}
 		}
 

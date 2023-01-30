@@ -1,6 +1,9 @@
 #pragma once
 
 #include "FVec3.hpp"
+#include "FQuat.hpp"
+
+#include <vector>
 
 namespace Fission::Math {
 
@@ -13,6 +16,9 @@ namespace Fission::Math {
 		bool IsAABBInside(const AABB& InOther) const;
 
 		void Offset(const FVec3& InOffset);
+
+		void Expand(const FVec3& InAmount);
+		void Expand(const std::vector<FVec3>& InPoints);
 	};
 
 }

@@ -5,37 +5,37 @@ namespace Fission {
 
 	void SemiImplicitEulerIntegrator::IntegrateForceTorqueAndDrag(DynamicBody* InBody, const Math::FVec3& InGravity, float InDeltaTime)
 	{
-		Math::FVec3 LinearVelocity = InBody->GetLinearVelocity();
-		LinearVelocity += (InGravity + InBody->GetAccumulatedForce() * InBody->GetInverseMass()) * InDeltaTime;
-		InBody->SetLinearVelocity(LinearVelocity);
+		Math::FVec3 linearVelocity = InBody->GetLinearVelocity();
+		linearVelocity += (InGravity + InBody->GetAccumulatedForce() * InBody->GetInverseMass()) * InDeltaTime;
+		InBody->SetLinearVelocity(linearVelocity);
 	}
 
 	void SemiImplicitEulerIntegrator::IntegrateVelocity(DynamicBody* InBody, float InDeltaTime)
 	{
-		const auto& Position = InBody->GetPosition();
-		InBody->SetPosition(Position + InBody->GetLinearVelocity() * InDeltaTime);
+		const auto& position = InBody->GetPosition();
+		InBody->SetPosition(position + InBody->GetLinearVelocity() * InDeltaTime);
 
 		// Integrate Angular Velocity
-		auto PositionCOM = InBody->GetWorldSpaceCenterOfMass();
-		auto RelativePositionCOM = Position - PositionCOM;
-		auto RotationMat = Math::Mat3x3::FromQuat(InBody->GetRotation());
-		auto InertiaTensor = RotationMat * InBody->GetShape()->GetInertiaTensor() * RotationMat.Transposed();
+		//auto positionCOM = InBody->GetWorldSpaceCenterOfMass();
+		//auto relativePositionCOM = position - positionCOM;
+		//auto rotationMat = Math::Mat3x3::FromQuat(InBody->GetRotation());
+		//auto inertiaTensor = rotationMat * InBody->GetShape()->GetInertiaTensor() * rotationMat.Transposed();
 
-		const auto& AngularVelocity = InBody->GetAngularVelocity();
+		//const auto& angularVelocity = InBody->GetAngularVelocity();
 
-		auto Alpha = InertiaTensor.Inversed() * (AngularVelocity.Cross(InertiaTensor * AngularVelocity));
-		InBody->SetAngularVelocity(AngularVelocity + Alpha);
+		//auto alpha = inertiaTensor.Inversed() * (angularVelocity.Cross(inertiaTensor * angularVelocity));
+		//InBody->SetAngularVelocity(angularVelocity + alpha);
 
-		// Update Rotation
-		auto DeltaAngle = AngularVelocity * InDeltaTime;
-		Math::FQuat DeltaRotation(DeltaAngle, DeltaAngle.Length());
-		const auto& Rotation = InBody->GetRotation();
-		InBody->SetRotation((DeltaRotation * Rotation).Normalized());
+		//// Update Rotation
+		//auto deltaAngle = angularVelocity * InDeltaTime;
+		//Math::FQuat deltaRotation(deltaAngle, deltaAngle.Length());
+		//const auto& rotation = InBody->GetRotation();
+		//InBody->SetRotation((deltaRotation * rotation).Normalized());
 
-		PositionCOM = InBody->GetWorldSpaceCenterOfMass();
+		//positionCOM = InBody->GetWorldSpaceCenterOfMass();
 
-		// Update Position to account for new rotation
-		InBody->SetPosition(PositionCOM + DeltaRotation * RelativePositionCOM);
+		//// Update Position to account for new rotation
+		//InBody->SetPosition(positionCOM + deltaRotation * relativePositionCOM);
 	}
 
 }

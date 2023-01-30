@@ -7,9 +7,9 @@ namespace Fission {
 	{
 		AddLinearImpulse(InImpulse);
 
-		auto Position = GetWorldSpaceCenterOfMass();
-		auto RelativePoint = InPoint - Position;
-		AddAngularImpulse(RelativePoint.Cross(InImpulse));
+		auto position = GetWorldSpaceCenterOfMass();
+		auto relativePoint = InPoint - position;
+		AddAngularImpulse(relativePoint.Cross(InImpulse));
 	}
 
 	void DynamicBody::AddLinearImpulse(const Math::FVec3& InImpulse)
@@ -24,8 +24,8 @@ namespace Fission {
 
 	Math::Mat3x3 DynamicBody::GetWorldSpaceInverseInertiaTensor() const
 	{
-		Math::Mat3x3 Rotation = Math::Mat3x3::FromQuat(m_Rotation);
-		return Rotation * m_InvInertia * Rotation.Transposed();
+		Math::Mat3x3 rotation = Math::Mat3x3::FromQuat(m_Rotation);
+		return rotation * m_InvInertia * rotation.Transposed();
 	}
 
 	void DynamicBody::UpdateInertiaTensor()

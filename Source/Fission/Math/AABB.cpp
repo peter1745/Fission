@@ -39,4 +39,31 @@ namespace Fission::Math {
 		MaxBound += InOffset;
 	}
 
+	void AABB::Expand(const FVec3& InAmount)
+	{
+		if (InAmount.X < MinBound.X)
+			MinBound.X = InAmount.X;
+
+		if (InAmount.Y < MinBound.Y)
+			MinBound.Y = InAmount.Y;
+
+		if (InAmount.Z < MinBound.Z)
+			MinBound.Z = InAmount.Z;
+
+		if (InAmount.X > MaxBound.X)
+			MaxBound.X = InAmount.X;
+
+		if (InAmount.Y > MaxBound.Y)
+			MaxBound.Y = InAmount.Y;
+
+		if (InAmount.Z > MaxBound.Z)
+			MaxBound.Z = InAmount.Z;
+	}
+
+	void AABB::Expand(const std::vector<FVec3>& InPoints)
+	{
+		for (const auto& point : InPoints)
+			Expand(point);
+	}
+
 }

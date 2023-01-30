@@ -2,6 +2,7 @@
 
 #include "Fission/Body/Body.hpp"
 #include "Fission/Integration/Integrator.hpp"
+#include "Fission/Collision/BroadPhase/BroadPhase.hpp"
 
 #include <vector>
 #include <memory>
@@ -35,6 +36,7 @@ namespace Fission {
 		PhysicsSettings m_Settings;
 
 		std::unique_ptr<Integrator> m_BodyIntegrator = nullptr;
+		std::unique_ptr<BroadPhase> m_BroadPhase = nullptr;
 
 		std::vector<std::unique_ptr<Body>> m_Bodies;
 		float m_DeltaTime = 0.0f;

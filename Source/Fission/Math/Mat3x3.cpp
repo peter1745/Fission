@@ -19,12 +19,12 @@ namespace Fission::Math {
 
 	Mat3x3 Mat3x3::operator*(const Mat3x3& InOther) const
 	{
-		Mat3x3 Result;
+		Mat3x3 result;
 
 		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Columns[Idx] = Columns[0] * InOther.Columns[Idx][0] + Columns[1] * InOther.Columns[Idx][1] + Columns[2] * InOther.Columns[Idx][2];
+			result.Columns[Idx] = Columns[0] * InOther.Columns[Idx][0] + Columns[1] * InOther.Columns[Idx][1] + Columns[2] * InOther.Columns[Idx][2];
 
-		return Result;
+		return result;
 	}
 
 	FVec3 Mat3x3::operator*(const FVec3& InOther) const
@@ -37,80 +37,80 @@ namespace Fission::Math {
 
 	Mat3x3 Mat3x3::operator*(float InOther) const
 	{
-		Mat3x3 Result;
-		FVec3 Scalar(InOther);
+		Mat3x3 result;
+		FVec3 scalar(InOther);
 
 		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Columns[Idx] = Columns[Idx] * Scalar;
+			result.Columns[Idx] = Columns[Idx] * scalar;
 
-		return Result;
+		return result;
 	}
 
 	Mat3x3 Mat3x3::Inversed() const
 	{
-		float OneOverDeterminant = 1.0f / (Columns[0][0] * (Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) - Columns[1][0] * (Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) + Columns[2][0] * (Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]));
+		float oneOverDeterminant = 1.0f / (Columns[0][0] * (Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) - Columns[1][0] * (Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) + Columns[2][0] * (Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]));
 
-		Mat3x3 Inverse;
-		Inverse[0][0] = +(Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) * OneOverDeterminant;
-		Inverse[1][0] = -(Columns[1][0] * Columns[2][2] - Columns[2][0] * Columns[1][2]) * OneOverDeterminant;
-		Inverse[2][0] = +(Columns[1][0] * Columns[2][1] - Columns[2][0] * Columns[1][1]) * OneOverDeterminant;
-		Inverse[0][1] = -(Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) * OneOverDeterminant;
-		Inverse[1][1] = +(Columns[0][0] * Columns[2][2] - Columns[2][0] * Columns[0][2]) * OneOverDeterminant;
-		Inverse[2][1] = -(Columns[0][0] * Columns[2][1] - Columns[2][0] * Columns[0][1]) * OneOverDeterminant;
-		Inverse[0][2] = +(Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]) * OneOverDeterminant;
-		Inverse[1][2] = -(Columns[0][0] * Columns[1][2] - Columns[1][0] * Columns[0][2]) * OneOverDeterminant;
-		Inverse[2][2] = +(Columns[0][0] * Columns[1][1] - Columns[1][0] * Columns[0][1]) * OneOverDeterminant;
+		Mat3x3 inverse;
+		inverse[0][0] = +(Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) * oneOverDeterminant;
+		inverse[1][0] = -(Columns[1][0] * Columns[2][2] - Columns[2][0] * Columns[1][2]) * oneOverDeterminant;
+		inverse[2][0] = +(Columns[1][0] * Columns[2][1] - Columns[2][0] * Columns[1][1]) * oneOverDeterminant;
+		inverse[0][1] = -(Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) * oneOverDeterminant;
+		inverse[1][1] = +(Columns[0][0] * Columns[2][2] - Columns[2][0] * Columns[0][2]) * oneOverDeterminant;
+		inverse[2][1] = -(Columns[0][0] * Columns[2][1] - Columns[2][0] * Columns[0][1]) * oneOverDeterminant;
+		inverse[0][2] = +(Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]) * oneOverDeterminant;
+		inverse[1][2] = -(Columns[0][0] * Columns[1][2] - Columns[1][0] * Columns[0][2]) * oneOverDeterminant;
+		inverse[2][2] = +(Columns[0][0] * Columns[1][1] - Columns[1][0] * Columns[0][1]) * oneOverDeterminant;
 
-		return Inverse;
+		return inverse;
 	}
 
 	Mat3x3 Mat3x3::FromQuat(const FQuat& InQuat)
 	{
-		Mat3x3 Result;
+		Mat3x3 result;
 
-		float X = InQuat.Value.X;
-		float Y = InQuat.Value.Y;
-		float Z = InQuat.Value.Z;
-		float W = InQuat.Value.W;
+		float x = InQuat.Value.X;
+		float y = InQuat.Value.Y;
+		float z = InQuat.Value.Z;
+		float w = InQuat.Value.W;
 
-		float TX = X + X;
-		float TY = Y + Y;
-		float TZ = Z + Z;
+		float tx = x + x;
+		float ty = y + y;
+		float tz = z + z;
 
-		float XX = TX * X;
-		float YY = TY * Y;
-		float ZZ = TZ * Z;
-		float XY = TX * Y;
-		float XZ = TX * Z;
-		float XW = TX * W;
-		float YZ = TY * Z;
-		float YW = TY * W;
-		float ZW = TZ * W;
+		float xx = tx * x;
+		float yy = ty * y;
+		float zz = tz * z;
+		float xy = tx * y;
+		float xz = tx * z;
+		float xw = tx * w;
+		float yz = ty * z;
+		float yw = ty * w;
+		float zw = tz * w;
 
-		Result[0] = FVec3((1.0f - YY) - ZZ, XY + ZW, XZ - YW);
-		Result[1] = FVec3(XZ - ZW, (1.0f - ZZ) - XX, YZ + XW);
-		Result[2] = FVec3(XZ + YW, YZ - XW, (1.0f - XX) - YY);
+		result[0] = FVec3((1.0f - yy) - zz, xy + zw, xz - yw);
+		result[1] = FVec3(xz - zw, (1.0f - zz) - xx, yz + xw);
+		result[2] = FVec3(xz + yw, yz - xw, (1.0f - xx) - yy);
 
-		return Result;
+		return result;
 	}
 
 	Mat3x3 Mat3x3::Transposed() const
 	{
-		Mat3x3 Result;
+		Mat3x3 result;
 
-		Result[0][0] = Columns[0][0];
-		Result[0][1] = Columns[1][0];
-		Result[0][2] = Columns[2][0];
+		result[0][0] = Columns[0][0];
+		result[0][1] = Columns[1][0];
+		result[0][2] = Columns[2][0];
 
-		Result[1][0] = Columns[0][1];
-		Result[1][1] = Columns[1][1];
-		Result[1][2] = Columns[2][1];
+		result[1][0] = Columns[0][1];
+		result[1][1] = Columns[1][1];
+		result[1][2] = Columns[2][1];
 
-		Result[2][0] = Columns[0][2];
-		Result[2][1] = Columns[1][2];
-		Result[2][2] = Columns[2][2];
+		result[2][0] = Columns[0][2];
+		result[2][1] = Columns[1][2];
+		result[2][2] = Columns[2][2];
 
-		return Result;
+		return result;
 	}
 
 }

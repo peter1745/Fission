@@ -6,8 +6,8 @@ namespace Fission::Math {
 
 	FVec3::FVec3(float InScalar)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] = InScalar;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] = InScalar;
 	}
 
 	FVec3::FVec3(float InX, float InY, float InZ)
@@ -22,123 +22,123 @@ namespace Fission::Math {
 
 	FVec3& FVec3::operator+=(const FVec3& InOther)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] += InOther.Values[Idx];
+		for (size_t i = 0; i < 3; i++)
+			Values[i] += InOther.Values[i];
 		return *this;
 	}
 
 	FVec3& FVec3::operator+=(float InValue)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] += InValue;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] += InValue;
 		return *this;
 	}
 
 	FVec3& FVec3::operator-=(const FVec3& InOther)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] -= InOther.Values[Idx];
+		for (size_t i = 0; i < 3; i++)
+			Values[i] -= InOther.Values[i];
 		return *this;
 	}
 
 	FVec3& FVec3::operator-=(float InValue)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] -= InValue;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] -= InValue;
 		return *this;
 	}
 
 	FVec3& FVec3::operator/=(const FVec3& InOther)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] /= InOther.Values[Idx];
+		for (size_t i = 0; i < 3; i++)
+			Values[i] /= InOther.Values[i];
 		return *this;
 	}
 
 	FVec3& FVec3::operator/=(float InValue)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] /= InValue;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] /= InValue;
 		return *this;
 	}
 
 	FVec3& FVec3::operator*=(const FVec3& InOther)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] *= InOther.Values[Idx];
+		for (size_t i = 0; i < 3; i++)
+			Values[i] *= InOther.Values[i];
 		return *this;
 	}
 
 	FVec3& FVec3::operator*=(float InValue)
 	{
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] *= InValue;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] *= InValue;
 		return *this;
 	}
 
 	FVec3 FVec3::operator+(const FVec3& InOther) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] + InOther.Values[Idx];
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] + InOther.Values[i];
+		return result;
 	}
 
 	FVec3 FVec3::operator+(float InValue) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] + InValue;
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] + InValue;
+		return result;
 
 	}
 
 	FVec3 FVec3::operator-(const FVec3& InOther) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] - InOther.Values[Idx];
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] - InOther.Values[i];
+		return result;
 	}
 
 	FVec3 FVec3::operator-(float InValue) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] - InValue;
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] - InValue;
+		return result;
 	}
 
 	FVec3 FVec3::operator/(const FVec3& InOther) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] / InOther.Values[Idx];
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] / InOther.Values[i];
+		return result;
 	}
 
 	FVec3 FVec3::operator/(float InValue) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] / InValue;
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] / InValue;
+		return result;
 	}
 
 	FVec3 FVec3::operator*(const FVec3& InOther) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] * InOther.Values[Idx];
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] * InOther.Values[i];
+		return result;
 	}
 
 	FVec3 FVec3::operator*(float InValue) const
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = Values[Idx] * InValue;
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = Values[i] * InValue;
+		return result;
 	}
 
 	FVec3 FVec3::operator-() const
@@ -148,10 +148,10 @@ namespace Fission::Math {
 
 	float FVec3::Dot(const FVec3& InOther) const
 	{
-		float DotProduct = 0.0f;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			DotProduct += Values[Idx] * InOther.Values[Idx];
-		return DotProduct;
+		float dotProduct = 0.0f;
+		for (size_t i = 0; i < 3; i++)
+			dotProduct += Values[i] * InOther.Values[i];
+		return dotProduct;
 	}
 
 	FVec3 FVec3::Cross(const FVec3& InOther) const
@@ -175,21 +175,21 @@ namespace Fission::Math {
 
 	void FVec3::Normalize()
 	{
-		float Len = Length();
+		float length = Length();
 
-		if (Len == 0.0f)
+		if (length == 0.0f)
 			return;
 
-		float InvLength = 1.0f / Len;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Values[Idx] *= InvLength;
+		float invLength = 1.0f / length;
+		for (size_t i = 0; i < 3; i++)
+			Values[i] *= invLength;
 	}
 
 	FVec3 FVec3::Normalized() const
 	{
-		FVec3 Result = *this;
-		Result.Normalize();
-		return Result;
+		FVec3 result = *this;
+		result.Normalize();
+		return result;
 	}
 
 	float& FVec3::operator[](size_t InIndex)
@@ -204,18 +204,18 @@ namespace Fission::Math {
 
 	FVec3 FVec3::Max(const FVec3& InVec0, const FVec3& InVec1)
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = std::max(InVec0.Values[Idx], InVec1.Values[Idx]);
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = std::max(InVec0.Values[i], InVec1.Values[i]);
+		return result;
 	}
 
 	FVec3 FVec3::Min(const FVec3& InVec0, const FVec3& InVec1)
 	{
-		FVec3 Result;
-		for (size_t Idx = 0; Idx < 3; Idx++)
-			Result.Values[Idx] = std::min(InVec0.Values[Idx], InVec1.Values[Idx]);
-		return Result;
+		FVec3 result;
+		for (size_t i = 0; i < 3; i++)
+			result.Values[i] = std::min(InVec0.Values[i], InVec1.Values[i]);
+		return result;
 	}
 
 	FVec3 FVec3::Zero() { return FVec3(0.0f); }
