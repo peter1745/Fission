@@ -199,7 +199,10 @@ namespace TestFramework {
 		shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, shaderKind, shaderName.c_str(), options);
 
 		if (module.GetCompilationStatus() != shaderc_compilation_status_success)
+		{
 			std::cout << "Failed to compile shader. Error: " << module.GetErrorMessage() << "\n";
+			TESTFRAMEWORK_VERIFY(false);
+		}
 
 		return module;
 	}

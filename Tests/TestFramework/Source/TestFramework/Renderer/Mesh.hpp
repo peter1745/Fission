@@ -10,7 +10,6 @@ namespace TestFramework {
 	{
 		float Position[3];
 		float Normal[3];
-		float TextureCoordinate[2];
 	};
 
 	struct Index

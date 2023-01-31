@@ -2,13 +2,22 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 	#if defined(_WIN64)
-		#define FUSION_PLATFORM_WINDOWS
+		#define TESTFRAMEWORK_PLATFORM_WINDOWS
 	#else
 		#error TestFramework only supports 64-bit Windows platforms!
 	#endif
 #elif __linux__
-	#define FUSION_PLATFORM_LINUX
+	#define TESTFRAMEWORK_PLATFORM_LINUX
 #endif
+
+#if defined(TESTFRAMEWORK_PLATFORM_WINDOWS)
+#define TESTFRAMEWORK_DEBUG_BREAK __debugbreak()
+#else
+#include <signal.h>
+#define TESTFRAMEWORK_DEBUG_BREAK raise(SIGABRT)
+#endif
+
+#define TESTFRAMEWORK_VERIFY(cond, ...) { if (!(cond)) { TESTFRAMEWORK_DEBUG_BREAK; } }
 
 #include <cstdint>
 #include <memory>

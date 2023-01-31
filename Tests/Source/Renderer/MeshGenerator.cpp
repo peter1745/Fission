@@ -63,8 +63,8 @@ MeshData MeshGenerator::GenerateCubeSphere(float radius, uint32_t segments, bool
 				TestFramework::Vertex& vertex = vertices.emplace_back();
 				memcpy(vertex.Position, &pos, sizeof(vertex.Position));
 				memcpy(vertex.Normal, &n, sizeof(vertex.Normal));
-				vertex.TextureCoordinate[0] = dx * 0.5f + 0.5f;
-				vertex.TextureCoordinate[1] = dy * 0.5f + 0.5f;
+				//vertex.TextureCoordinate[0] = dx * 0.5f + 0.5f;
+				//vertex.TextureCoordinate[1] = dy * 0.5f + 0.5f;
 			}
 		}
 
