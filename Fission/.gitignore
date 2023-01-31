@@ -1,0 +1,6 @@
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+Tests/bin/
+Tests/obj/

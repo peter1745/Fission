@@ -1,51 +1,28 @@
-project "Fission"
-    kind "StaticLib"
-    language "C++"
-    cppdialect "C++20"
-    staticruntime "Off"
+include "./Vendor/premake-dwarf.lua"
+include "Dependencies.lua"
 
-    targetdir (BuildDir .. "/%{prj.name}")
-    objdir (IntermediatesDir .. "/%{prj.name}")
+workspace "Fission"
+    architecture "x86_64"
+    startproject "FissionTests"
 
-    files {
-        "Source/**.cpp",
-        "Source/**.hpp",
-        "Source/**.h"
-    }
+    configurations { "Debug", "Release", "Distribution" }
 
-    includedirs { "Source/" }
+    flags { "MultiProcessorCompile" }
+
+    warnings "High"
 
     filter "action:vs*"
-        pchheader "FissionPCH.hpp"
-        pchsource "Source/FissionPCH.cpp"
+        linkoptions { "/ignore:4099" } -- Disable no PDB found warning
 
-    filter "action:not vs*"
-        pchheader "FissionPCH.hpp"
+BuildDir = "%{wks.location}/Build/%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+IntermediatesDir = "%{wks.location}/Build/Intermediates/%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 
-    filter "system:windows"
-        systemversion "latest"
+group "ThirdParty"
+include "ThirdParty/GLFW"
+include "ThirdParty/ImGui"
+--include "ThirdParty/tracy/tracy"
+group ""
 
-        buildoptions { "/EHsc", "/Zc:preprocessor" }
-
-    filter "system:linux"
-        debugformat "Dwarf-4"
-
-    filter "configurations:Debug"
-        defines "FISSION_DEBUG"
-        runtime "Debug"
-        symbols "On"
-        conformancemode "On"
-
-    filter "configurations:Release"
-        defines "FISSION_RELEASE"
-        runtime "Release"
-        optimize "On"
-        conformancemode "On"
-
-    filter "configurations:Distribution"
-        defines "FISSION_DIST"
-        runtime "Release"
-        optimize "Full"
-        conformancemode "On"
-
---include "Tests"
+include "Fission"
+include "Tests/TestFramework"
+include "Tests"

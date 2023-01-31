@@ -1,0 +1,7 @@
+[submodule "ThirdParty/GLFW"]
+	path = ThirdParty/GLFW
+	url = https://github.com/peter1745/GLFW
+[submodule "ThirdParty/ImGui"]
+	path = ThirdParty/ImGui
+	url = https://github.com/peter1745/ImGui
+	branch = docking

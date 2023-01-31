@@ -1,6 +1,16 @@
+# Files
 *.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
+*.user
+*.filters
+*.sln
+*.cmake
+Makefile
+CMakeLists.txt
+ValgrindResult.xml
 
-Tests/bin/
-Tests/obj/
+# Directories
+.vs/
+.vscode/
+.idea/
+Build/
+**/Logs
