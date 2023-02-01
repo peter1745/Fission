@@ -121,6 +121,7 @@ namespace Fission {
 			body->m_Position = InSettings.Position;
 			body->m_Rotation = InSettings.Rotation;
 			body->m_Shape = InSettings.CollisionShape;
+			body->m_Friction = InSettings.Friction;
 			body->m_Restitution = InSettings.Restitution;
 			return m_Bodies.emplace_back(std::move(body)).get();
 		}
@@ -131,6 +132,7 @@ namespace Fission {
 			body->m_Rotation = InSettings.Rotation;
 			body->m_Shape = InSettings.CollisionShape;
 			body->m_InvMass = 1.0f / InSettings.Mass;
+			body->m_Friction = InSettings.Friction;
 			body->m_Restitution = InSettings.Restitution;
 			body->UpdateInertiaTensor();
 			return m_Bodies.emplace_back(std::move(body)).get();

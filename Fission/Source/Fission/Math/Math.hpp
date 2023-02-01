@@ -7,4 +7,6 @@ namespace Fission::Math {
 	float Radians(float InDegrees);
 	float Clamp(float InValue, float InMin, float InMax);
 
+	bool IsNearZero(float InValue, float InEpsilon = 0.0005f);
+
 }

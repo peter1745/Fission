@@ -51,6 +51,8 @@ namespace Fission::Math {
 		float& operator[](size_t InIndex);
 		float operator[](size_t InIndex) const;
 
+		bool IsValid() const;
+
 		static FVec3 Max(const FVec3& InVec0, const FVec3& InVec1);
 		static FVec3 Min(const FVec3& InVec0, const FVec3& InVec1);
 		static FVec3 Zero();

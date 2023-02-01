@@ -1,6 +1,7 @@
 #include "SpheresStressTest.hpp"
 
 #include <Fission/Collision/Shapes/SphereShape.hpp>
+#include <Fission/Math/Math.hpp>
 
 #include <iostream>
 
@@ -15,6 +16,7 @@ void SpheresStressTest::DrawUI()
 
 void SpheresStressTest::OnStart()
 {
+	int32_t i = 0;
 	for (int32_t x = -5; x < 5; x++)
 	{
 		for (int32_t z = -5; z < 5; z++)
@@ -22,8 +24,16 @@ void SpheresStressTest::OnStart()
 			Fission::BodySettings groundSettings;
 			groundSettings.BodyType = Fission::EBodyType::Static;
 			groundSettings.Position = { x * 80.0f, -40.0f, z * 80.0f };
+			groundSettings.Friction = 0.9f;
+			groundSettings.Restitution = 0.0f;
+
+			if (i % 2 == 0)
+				groundSettings.Rotation = Fission::Math::FQuat(Fission::Math::FVec3(0.0f, 0.0f, 1.0f), Fission::Math::Radians(90.0f));
+
 			groundSettings.CollisionShape = new Fission::SphereShape(60.0f);
 			m_PhysicsWorld->CreateBody(groundSettings);
+
+			i++;
 		}
 	}
 
@@ -39,6 +49,8 @@ void SpheresStressTest::OnStart()
 				settings.BodyType = Fission::EBodyType::Dynamic;
 				settings.Position = { xCol * 20.0f, y * 2.5f + 35.0f, zCol * 20.0f };
 				settings.CollisionShape = new Fission::SphereShape(1.0f);
+				settings.Restitution = 0.0f;
+				settings.Mass = 1.0f;
 				m_PhysicsWorld->CreateBody(settings);
 
 				sphereCount++;

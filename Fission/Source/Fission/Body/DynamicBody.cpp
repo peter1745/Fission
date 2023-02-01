@@ -1,6 +1,8 @@
 #include "FissionPCH.hpp"
 #include "DynamicBody.hpp"
 
+#include "Fission/Core/Assert.hpp"
+
 namespace Fission {
 
 	void DynamicBody::AddImpulse(const Math::FVec3& InPoint, const Math::FVec3& InImpulse)
@@ -20,6 +22,13 @@ namespace Fission {
 	void DynamicBody::AddAngularImpulse(const Math::FVec3& InImpulse)
 	{
 		m_AngularVelocity += GetWorldSpaceInverseInertiaTensor() * InImpulse;
+
+		constexpr float MaxAngularVelocity = 30.0f;
+		if (m_AngularVelocity.LengthSq() > MaxAngularVelocity * MaxAngularVelocity)
+		{
+			m_AngularVelocity.Normalize();
+			m_AngularVelocity *= MaxAngularVelocity;
+		}
 	}
 
 	Math::Mat3x3 DynamicBody::GetWorldSpaceInverseInertiaTensor() const

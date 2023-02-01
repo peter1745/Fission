@@ -1,6 +1,9 @@
 #include "FissionPCH.hpp"
 #include "FVec3.hpp"
 #include "FVec4.hpp"
+#include "Math.hpp"
+
+#include "Fission/Core/Assert.hpp"
 
 namespace Fission::Math {
 
@@ -177,7 +180,7 @@ namespace Fission::Math {
 	{
 		float length = Length();
 
-		if (length == 0.0f)
+		if (IsNearZero(length))
 			return;
 
 		float invLength = 1.0f / length;
@@ -219,5 +222,16 @@ namespace Fission::Math {
 	}
 
 	FVec3 FVec3::Zero() { return FVec3(0.0f); }
+
+	bool FVec3::IsValid() const
+	{
+		for (size_t i = 0; i < 3; i++)
+		{
+			if (Values[i] != Values[i])
+				return false;
+		}
+
+		return true;
+	}
 
 }

@@ -1,5 +1,6 @@
 #include "FissionPCH.hpp"
 #include "Mat4x4.hpp"
+#include "Math.hpp"
 
 namespace Fission::Math {
 
@@ -153,6 +154,9 @@ namespace Fission::Math {
 
 		FVec4 Dot0(Columns[0] * Row0);
 		float Dot1 = (Dot0.X + Dot0.Y) + (Dot0.Z + Dot0.W);
+
+		if (IsNearZero(Dot1))
+			return;
 
 		float OneOverDeterminant = 1.0f / Dot1;
 

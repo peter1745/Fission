@@ -19,4 +19,9 @@ namespace Fission::Math {
 		return InValue;
 	}
 
+	bool IsNearZero(float InValue, float InEpsilon /*= 0.0005f*/)
+	{
+		return fabs(InValue) < InEpsilon;
+	}
+
 }

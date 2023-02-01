@@ -226,7 +226,7 @@ namespace FissionTests {
 			const auto& position = actor.PhysicsBody->GetPosition();
 			const auto& rotation = actor.PhysicsBody->GetRotation();
 
-			m_TransformData.Transform = Fission::Math::Mat4x4::CreateTranslation({ position.X, position.Y, position.Z });
+			m_TransformData.Transform = Fission::Math::Mat4x4::CreateTranslation({ position.X, position.Y, position.Z }) * Fission::Math::Mat4x4::FromQuat(rotation);
 			CmdList->SetPushConstants(m_Pipeline.get(), TestFramework::EShaderStage::Vertex, sizeof(TransformData), &m_TransformData);
 
 			TestFramework::VertexBufferView View = {};

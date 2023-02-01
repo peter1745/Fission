@@ -1,10 +1,13 @@
 #include "FissionPCH.hpp"
 #include "Mat3x3.hpp"
+#include "Math.hpp"
 
 namespace Fission::Math {
 
 	Mat3x3::Mat3x3(float InDiagonal)
 	{
+		memset(Columns, 0, sizeof(Columns));
+
 		Columns[0][0] = InDiagonal;
 		Columns[1][1] = InDiagonal;
 		Columns[2][2] = InDiagonal;
@@ -48,20 +51,24 @@ namespace Fission::Math {
 
 	Mat3x3 Mat3x3::Inversed() const
 	{
-		float oneOverDeterminant = 1.0f / (Columns[0][0] * (Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) - Columns[1][0] * (Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) + Columns[2][0] * (Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]));
+		float det = Columns[0].Dot(Columns[1].Cross(Columns[2]));
 
-		Mat3x3 inverse;
-		inverse[0][0] = +(Columns[1][1] * Columns[2][2] - Columns[2][1] * Columns[1][2]) * oneOverDeterminant;
-		inverse[1][0] = -(Columns[1][0] * Columns[2][2] - Columns[2][0] * Columns[1][2]) * oneOverDeterminant;
-		inverse[2][0] = +(Columns[1][0] * Columns[2][1] - Columns[2][0] * Columns[1][1]) * oneOverDeterminant;
-		inverse[0][1] = -(Columns[0][1] * Columns[2][2] - Columns[2][1] * Columns[0][2]) * oneOverDeterminant;
-		inverse[1][1] = +(Columns[0][0] * Columns[2][2] - Columns[2][0] * Columns[0][2]) * oneOverDeterminant;
-		inverse[2][1] = -(Columns[0][0] * Columns[2][1] - Columns[2][0] * Columns[0][1]) * oneOverDeterminant;
-		inverse[0][2] = +(Columns[0][1] * Columns[1][2] - Columns[1][1] * Columns[0][2]) * oneOverDeterminant;
-		inverse[1][2] = -(Columns[0][0] * Columns[1][2] - Columns[1][0] * Columns[0][2]) * oneOverDeterminant;
-		inverse[2][2] = +(Columns[0][0] * Columns[1][1] - Columns[1][0] * Columns[0][1]) * oneOverDeterminant;
+		if (IsNearZero(det))
+			return *this;
 
-		return inverse;
+		FVec3 column0((Columns[1][1] * Columns[2][2] - Columns[1][2] * Columns[2][1]) / det,
+					  (Columns[1][2] * Columns[2][0] - Columns[1][0] * Columns[2][2]) / det,
+					  (Columns[1][0] * Columns[2][1] - Columns[1][1] * Columns[2][0]) / det);
+
+		FVec3 column1((Columns[0][2] * Columns[2][1] - Columns[0][1] * Columns[2][2]) / det,
+					  (Columns[0][0] * Columns[2][2] - Columns[0][2] * Columns[2][0]) / det,
+					  (Columns[0][1] * Columns[2][0] - Columns[0][0] * Columns[2][1]) / det);
+
+		FVec3 column2((Columns[0][1] * Columns[1][2] - Columns[0][2] * Columns[1][1]) / det,
+					  (Columns[0][2] * Columns[1][0] - Columns[0][0] * Columns[1][2]) / det,
+					  (Columns[0][0] * Columns[1][1] - Columns[0][1] * Columns[1][0]) / det);
+
+		return Mat3x3(column0, column1, column2);
 	}
 
 	Mat3x3 Mat3x3::FromQuat(const FQuat& InQuat)

@@ -18,6 +18,7 @@ namespace Fission {
 		float Mass = 1000.0f;
 		Shape* CollisionShape = nullptr;
 
+		float Friction = 0.2f;
 		float Restitution = 0.1f;
 	};
 
@@ -41,6 +42,7 @@ namespace Fission {
 		const Math::FVec3& GetCenterOfMass() const { return m_Shape->GetCenterOfMass(); }
 		Math::FVec3 GetWorldSpaceCenterOfMass() const { return m_Position + (m_Rotation * m_Shape->GetCenterOfMass()); }
 
+		float GetFriction() const { return m_Restitution; }
 		float GetResititution() const { return m_Restitution; }
 
 	public:
@@ -53,6 +55,7 @@ namespace Fission {
 		// TODO(Peter): Make this a unique_ptr, body should own it's shape
 		Shape* m_Shape = nullptr;
 
+		float m_Friction;
 		float m_Restitution;
 
 	private:
