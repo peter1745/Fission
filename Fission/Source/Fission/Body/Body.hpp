@@ -42,7 +42,7 @@ namespace Fission {
 		const Math::FVec3& GetCenterOfMass() const { return m_Shape->GetCenterOfMass(); }
 		Math::FVec3 GetWorldSpaceCenterOfMass() const { return m_Position + (m_Rotation * m_Shape->GetCenterOfMass()); }
 
-		float GetFriction() const { return m_Restitution; }
+		float GetFriction() const { return m_Friction; }
 		float GetResititution() const { return m_Restitution; }
 
 	public:

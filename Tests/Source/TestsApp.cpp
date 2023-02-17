@@ -182,6 +182,7 @@ namespace FissionTests {
 			ImGui::Text("Simulation Time: %.4f", m_SimulationTime);
 
 			const auto& stats = currentTest->GetPhysicsWorld()->GetStats();
+			ImGui::Text("Bodies: %d", currentTest->GetPhysicsWorld()->GetBodies().size());
 			ImGui::Text("Contacts: %d", stats.NumContacts);
 			ImGui::Text("Collision Pairs: %d", stats.NumCollisionPairs);
 

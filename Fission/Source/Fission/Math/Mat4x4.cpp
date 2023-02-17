@@ -89,7 +89,7 @@ namespace Fission::Math {
 		float zw = tz * w;
 
 		result[0] = FVec4((1.0f - yy) - zz, xy + zw, xz - yw, 0.0f);
-		result[1] = FVec4(xz - zw, (1.0f - zz) - xx, yz + xw, 0.0f);
+		result[1] = FVec4(xy - zw, (1.0f - zz) - xx, yz + xw, 0.0f);
 		result[2] = FVec4(xz + yw, yz - xw, (1.0f - xx) - yy, 0.0f);
 		result[3][3] = 1.0f;
 

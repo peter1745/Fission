@@ -94,10 +94,10 @@ namespace Fission {
 			Math::FVec3 impulseFriction = velocityTangent * reducedMass * combinedFriction;
 
 			if (Contact.BodyA->GetType() == EBodyType::Dynamic)
-				Contact.BodyA->As<DynamicBody>()->AddImpulse(Contact.WorldSpacePointA, impulseFriction);
+				Contact.BodyA->As<DynamicBody>()->AddImpulse(Contact.WorldSpacePointA, -impulseFriction);
 
 			if (Contact.BodyB->GetType() == EBodyType::Dynamic)
-				Contact.BodyB->As<DynamicBody>()->AddImpulse(Contact.WorldSpacePointB, -impulseFriction);
+				Contact.BodyB->As<DynamicBody>()->AddImpulse(Contact.WorldSpacePointB, impulseFriction);
 
 			float massContributionA = invMassA / (invMassA + invMassB);
 			float massContributionB = invMassB / (invMassA + invMassB);

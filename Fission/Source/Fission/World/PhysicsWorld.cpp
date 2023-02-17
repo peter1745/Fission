@@ -37,7 +37,7 @@ namespace Fission {
 		}
 
 		ContactResolver resolver;
-#if 1
+
 		m_BroadPhase->Execute(m_Bodies, InDeltaTime);
 
 		const auto& collisionPairs = m_BroadPhase->GetCollisionPairs();
@@ -67,38 +67,6 @@ namespace Fission {
 				m_Stats.NumContacts++;
 			}
 		}
-#else
-		for (size_t i = 0; i < m_Bodies.size(); i++)
-		{
-			auto& body0 = m_Bodies[i];
-			Shape* shape0 = body0->GetShape();
-
-			// If this body doesn't have a shape it can't collide with anything
-			if (shape0 == nullptr)
-				continue;
-
-			for (size_t j = i + 1; j < m_Bodies.size(); j++)
-			{
-				auto& body1 = m_Bodies[j];
-
-				if (body0->GetType() == EBodyType::Static && body1->GetType() == EBodyType::Static)
-					continue;
-
-				Shape* shape1 = body1->GetShape();
-
-				m_Stats.NumCollisionPairs++;
-
-				bool isColliding = false;
-				isColliding = CollisionChecker::TestSphereSphereCollision(body0->GetPosition(), static_cast<const SphereShape*>(shape0), body1->GetPosition(), static_cast<const SphereShape*>(shape1));
-
-				if (isColliding)
-				{
-					resolver.GenerateContact(body0.get(), body1.get());
-					m_Stats.NumContacts++;
-				}
-			}
-		}
-#endif
 
 		for (auto& body : m_Bodies)
 		{
